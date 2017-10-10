@@ -2,7 +2,7 @@ const { Wit, log } = require('node-wit');
 const FBMessenger = require('fb-messenger');
 const firebase = require("firebase");
 
-const { PAGE_ACCESS_TOKEN, WIT_ACCESS_TOKEN, FIREBASE_CONFIG } = require('./token');
+const { PAGE_ACCESS_TOKEN, WIT_ACCESS_TOKEN, FIREBASE_CONFIG } = require('./Token');
 
 const messenger = new FBMessenger(PAGE_ACCESS_TOKEN);
 
