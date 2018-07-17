@@ -15,8 +15,8 @@ firebase.initializeApp(FIREBASE_CONFIG);
 let intentAnswerList;
 let getAnswerList = firebase.database().ref('/AnswerListV2/');
 console.log('getting answer based intent in firebase')
-getAnswerList.on('value', function (snapshot) => {
-  //updateStarCount(postElement, snapshot.val());
+getAnswerList.on('value', (snapshot) => {
+  // updateStarCount(postElement, snapshot.val());
   intentAnswerList = snapshot.val();
 });
 
@@ -38,10 +38,10 @@ const handler = (data) => {
   const message = data.message.text;
   messenger.sendTextMessage({
     recipient: {
-      id: senderID
+      id: senderID,
     },
-    sender_action: 'typing_on' // typing_off
-  })
+    sender_action: 'typing_on', // typing_off
+  });
 
   client.message(message)
     .then((intentData) => {
