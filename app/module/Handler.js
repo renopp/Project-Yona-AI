@@ -36,29 +36,20 @@ const isDefined = (obj) => {
 const handler = (data) => {
   const senderID = data.sender.id;
   const message = data.message.text;
-  messenger.sendTextMessage({
-    recipient: {
-      id: senderID,
-    },
-    sender_action: 'typing_on', // typing_off
-  });
+  messenger.sender_action(senderID, 'mark_seen');
+  messenger.sender_action(senderID, 'typing_on');
 
   client.message(message)
     .then((intentData) => {
       if (intentData.entities.intent != null) {
-        //getting intent
-        intent = intentData.entities.intent[0].value;
-        //getting answerlist form list answer based on intent
-        answerList = intentAnswerList[intent];
-        //choose one random in answerlist
-        answer = answerList[Math.floor((Math.random() * answerList.length) + 0)]
-        //sending message to specified user
-        messenger.sendTextMessage({
-          recipient: {
-            id: senderID
-          },
-          sender_action: 'typing_off' // typing_off
-        })
+        // getting intent
+        const intent = intentData.entities.intent[0].value;
+        // getting answerlist form list answer based on intent
+        const answerList = intentAnswerList[intent];
+        // choose one random in answerlist
+        const answer = answerList[Math.floor((Math.random() * answerList.length) + 0)];
+        // sending message to specified user
+        messenger.sender_action(senderID, 'typing_off');
         messenger.sendTextMessage(senderID, answer);
         console.log(`sending message to ${senderID} with message = ${answer}`)
       }
