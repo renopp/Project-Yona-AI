@@ -7,8 +7,8 @@ const processor = (req, res) => {
   if (data.object === 'page') {
     // entries may be batched so iterate over each one
     data.entry.forEach((pageEntry) => {
-      const pageID = pageEntry.id;
-      const timeOfEvent = pageEntry.time;
+      // const pageID = pageEntry.id;
+      // const timeOfEvent = pageEntry.time;
 
       // iterate over each messaging event
       pageEntry.messaging.forEach((messagingEvent) => {
