@@ -40,8 +40,8 @@ const handler = (data) => {
     .then((intentData) => {
       if (intentData.entities.intent != null) {
         let answer = '';
-        console.log(intentData.entities.intent);
-        if (intentData.entities.intent === 'askFacebookId') {
+        
+        if (intentData.entities.ntent[0].value === 'askFacebookId') {
           answer = `Facebook ID mu adalah ${senderID}`;
         } else {
           // getting intent
