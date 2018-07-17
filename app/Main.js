@@ -1,4 +1,7 @@
 const handler = require('./module/Handler');
+const FBMessenger = require('fb-messenger');
+const messenger = new FBMessenger(PAGE_ACCESS_TOKEN);
+const { PAGE_ACCESS_TOKEN } = require('./module/Token');
 
 const processor = (req, res) => {
   const data = req.body;
@@ -16,8 +19,9 @@ const processor = (req, res) => {
         for (const prop in messagingEvent) { propertyNames.push(prop); }
         console.log('[app.post] Webhook received a messagingEvent with properties: ', propertyNames.join());
         if (messagingEvent.message) {
-          // someone sent a message
+          messenger.sendAction(messagingEvent.message.sender.id, 'typing_on');
           handler(messagingEvent);
+          messenger.sendAction(messagingEvent.message.sender.id, 'typing_off');
         } else {
           console.log('[app.post] Webhook is not prepared to handle this message.');
         }

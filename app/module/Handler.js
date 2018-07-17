@@ -33,7 +33,7 @@ const isDefined = (obj) => {
   return obj != null;
 };
 
-const handler = async (data) => {
+const handler = (data) => {
   const senderID = data.sender.id;
   const message = data.message.text;
   client.message(message)
