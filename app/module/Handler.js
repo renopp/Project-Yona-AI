@@ -37,7 +37,8 @@ const handler = async (data) => {
   const senderID = data.sender.id;
   const message = data.message.text;
   messenger.sendAction(senderID, 'mark_seen');
-  await setTimeout(messenger.sendAction(senderID, 'typing_on'), 3000);
+  await setTimeout((() => messenger.sendAction(senderID, 'typing_on'), 3000));
+  messenger.sendAction(senderID, 'typing_off');
   client.message(message)
     .then((intentData) => {
       if (intentData.entities.intent != null) {
@@ -48,7 +49,6 @@ const handler = async (data) => {
         // choose one random in answerlist
         const answer = answerList[Math.floor((Math.random() * answerList.length) + 0)];
         // sending message to specified user
-        messenger.sendAction(senderID, 'typing_off');
         messenger.sendTextMessage(senderID, answer);
         console.log(`sending message to ${senderID} with message = ${answer}`)
       }
