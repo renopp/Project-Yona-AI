@@ -37,7 +37,8 @@ const handler = async (data) => {
   const senderID = data.sender.id;
   const message = data.message.text;
   messenger.sendAction(senderID, 'mark_seen');
-  await setTimeout(() => messenger.sendAction(senderID, 'typing_on'), 3000);
+  await setTimeout(() => console.log('waiting'), 3000);
+  messenger.sendAction(senderID, 'typing_on');
   // await setTimeout((() => messenger.sendAction(senderID, 'typing_on'), 3000));
   messenger.sendAction(senderID, 'typing_off');
   client.message(message)
