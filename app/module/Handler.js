@@ -33,12 +33,11 @@ const isDefined = (obj) => {
   return obj != null;
 };
 
-const handler = (data) => {
+const handler = async (data) => {
   const senderID = data.sender.id;
   const message = data.message.text;
   messenger.sendAction(senderID, 'mark_seen');
-  messenger.sendAction(senderID, 'typing_on');
-
+  await setTimeout(messenger.sendAction(senderID, 'typing_on'), 3000);
   client.message(message)
     .then((intentData) => {
       if (intentData.entities.intent != null) {
