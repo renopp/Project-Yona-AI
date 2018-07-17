@@ -51,8 +51,8 @@ const handler = (data) => {
           // choose one random in answerlist
           answer = answerList[Math.floor((Math.random() * answerList.length) + 0)];
           // sending message to specified user
-          messenger.sendTextMessage(senderID, answer);
         }
+        messenger.sendTextMessage(senderID, answer);
         console.log(`sending message to ${senderID} with message = ${answer}`)
       }
     });
