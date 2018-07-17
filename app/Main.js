@@ -1,7 +1,9 @@
 const handler = require('./module/Handler');
 const FBMessenger = require('fb-messenger');
-const messenger = new FBMessenger(PAGE_ACCESS_TOKEN);
+
 const { PAGE_ACCESS_TOKEN } = require('./module/Token');
+
+const messenger = new FBMessenger(PAGE_ACCESS_TOKEN);
 
 const processor = (req, res) => {
   const data = req.body;
