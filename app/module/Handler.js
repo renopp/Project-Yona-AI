@@ -79,7 +79,7 @@ const handleIotAction = async (fbid, place, thingname, state) => {
     // get home if with facebook id
     const profile = usersList.filter(data => data.facebookId === fbid);
     
-    if (profile[0].home !== undefined) {
+    if (profile[0] !== undefined) {
       const homeid = profile[0].home;
       const roomRef = firebase.database().ref(`/HomeList/${homeid}/devicesList`);
       roomRef.once('value', (snapshot) => {
