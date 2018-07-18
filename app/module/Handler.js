@@ -71,63 +71,67 @@ const handler = (data) => {
 const handleIotAction = async (fbid, place, thingname, state) => {
 
   const usersRef = await firebase.database().ref('/Users/').on('value', (snapshot) => {
-      const usersList = [];
-      snapshot.forEach((data) => {
-          usersList.push(data.val());
-      });
+    const usersList = [];
+    snapshot.forEach((data) => {
+      usersList.push(data.val());
+    });
 
-      // get home if with facebook id
-      const profile = usersList.filter(data => data.facebookId === fbid);
+    // get home if with facebook id
+    const profile = usersList.filter(data => data.facebookId === fbid);
+    
+    if (profile) {
       const homeid = profile[0].home;
-
       const roomRef = firebase.database().ref(`/HomeList/${homeid}/devicesList`);
       roomRef.once('value', (snapshot) => {
-          if (snapshot.val()) {
-              let deviceId = '';
-              snapshot.forEach((data) => {
-                  // getting room id with place name
-                  if (data.val().name.toUpperCase() === place.toUpperCase()) {
-                      deviceId = data.key;
+        if (snapshot.val()) {
+          let deviceId = '';
+          snapshot.forEach((data) => {
+            // getting room id with place name
+            if (data.val().name.toUpperCase() === place.toUpperCase()) {
+              deviceId = data.key;
+            }
+          });
+          if (deviceId) {
+            const thingRef = firebase.database().ref(`/HomeList/${homeid}/devicesList/${deviceId}/thingsList`);
+            thingRef.once('value', (snapshot) => {
+              let thingId = '';
+              let iterator = 0;
+              if (snapshot.val()) {
+                snapshot.val().forEach((data) => {
+                  if (data.thingName.toUpperCase() === thingname.toUpperCase()) {
+                    thingId = iterator;
                   }
-              });
-              if (deviceId) {
-                  const thingRef = firebase.database().ref(`/HomeList/${homeid}/devicesList/${deviceId}/thingsList`);
-                  thingRef.once('value', (snapshot) => {
-                      let thingId = '';
-                      let iterator = 0;
-                      if (snapshot.val()) {
-                          snapshot.val().forEach((data) => {
-                              if (data.thingName.toUpperCase() === thingname.toUpperCase()) {
-                                  thingId = iterator;
-                              }
-                              iterator++;
-                          });
-                      }
-                      if (thingId) {
-                          console.log(`/HomeList/${homeid}/devicesList/${deviceId}/thingsList/${thingId}/state/${state}`);
-                          firebase.database().ref(`/HomeList/${homeid}/devicesList/${deviceId}/thingsList/${thingId}/`).update({state});
-                          let aksi = '';
-                          if(thingname.toUpperCase() === 'lampu'.toUpperCase() || thingname.toUpperCase() === 'alarm'.toUpperCase()){
-                            if(state){
-                              aksi = 'nyalakan'
-                            } else{
-                              aksi = 'matikan'
-                            }
-                          } else if(thingname.toUpperCase() === 'kunci'.toUpperCase()){
-                            aksi = 'bukain'
-                          }
-                          messenger.sendTextMessage(fbid, `${thingname} ${place} sudah aku ${aksi}`)
-                      } else {
-                          console.log('tidak ada thing dengan nama tersebut');
-                          messenger.sendTextMessage(fbid, `tidak ada thing dengan tipe ${thingname} di ruangan ${place}`)
-                      }
-                  });
-              } else {
-                  console.log('tidak ada tempat dengan nama tersebut');
-                  messenger.sendTextMessage(fbid, `tidak ada ruangan dengan nama ${place}`);
+                  iterator++;
+                });
               }
+              if (thingId) {
+                console.log(`/HomeList/${homeid}/devicesList/${deviceId}/thingsList/${thingId}/state/${state}`);
+                firebase.database().ref(`/HomeList/${homeid}/devicesList/${deviceId}/thingsList/${thingId}/`).update({ state });
+                let aksi = '';
+                if (thingname.toUpperCase() === 'lampu'.toUpperCase() || thingname.toUpperCase() === 'alarm'.toUpperCase()) {
+                  if (state) {
+                    aksi = 'nyalakan'
+                  } else {
+                    aksi = 'matikan'
+                  }
+                } else if (thingname.toUpperCase() === 'kunci'.toUpperCase()) {
+                  aksi = 'bukain'
+                }
+                messenger.sendTextMessage(fbid, `${thingname} ${place} sudah aku ${aksi}`)
+              } else {
+                console.log('tidak ada thing dengan nama tersebut');
+                messenger.sendTextMessage(fbid, `tidak ada thing dengan tipe ${thingname} di ruangan ${place}`)
+              }
+            });
+          } else {
+            console.log('tidak ada tempat dengan nama tersebut');
+            messenger.sendTextMessage(fbid, `tidak ada ruangan dengan nama ${place}`);
           }
+        }
       });
+    } else {
+      messenger.sendTextMessage(fbid, `akunmu tidak mempunyai daftar rumah di dalam sistem`);
+    }
   });
 }
 
