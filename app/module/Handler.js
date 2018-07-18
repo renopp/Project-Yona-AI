@@ -96,10 +96,12 @@ const handleIotAction = async (fbid, place, thingname, state) => {
             thingRef.once('value', (snapshot) => {
               let thingId = '';
               let iterator = 0;
+              let thingType = '';
               if (snapshot.val()) {
                 snapshot.val().forEach((data) => {
                   if (data.thingName.toUpperCase() === thingname.toUpperCase()) {
                     thingId = iterator;
+                    thingType = data.type;
                   }
                   iterator++;
                 });
@@ -108,14 +110,14 @@ const handleIotAction = async (fbid, place, thingname, state) => {
                 console.log(`/HomeList/${homeid}/devicesList/${deviceId}/thingsList/${thingId}/state/${state}`);
                 firebase.database().ref(`/HomeList/${homeid}/devicesList/${deviceId}/thingsList/${thingId}/`).update({ state });
                 let aksi = '';
-                if (thingname.toUpperCase() === 'lampu'.toUpperCase() || thingname.toUpperCase() === 'alarm'.toUpperCase()) {
+                if (thingType.toUpperCase() === 'lampu'.toUpperCase() || thingType.toUpperCase() === 'alarm'.toUpperCase()) {
                   if (state) {
                     aksi = 'nyalakan'
                   } else {
                     aksi = 'matikan'
                   }
-                } else if (thingname.toUpperCase() === 'kunci'.toUpperCase()) {
-                  aksi = 'bukain'
+                } else if (thingType.toUpperCase() === 'kunci'.toUpperCase()) {
+                  aksi = 'bukain';
                 }
                 messenger.sendTextMessage(fbid, `${thingname} ${place} sudah aku ${aksi}`)
               } else {
