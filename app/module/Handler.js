@@ -63,7 +63,7 @@ const handler = (data) => {
         let namaTempat = intentData.entities.iot_place[0].value;
         let namaThing = intentData.entities.iot_things[0].value;
         let state = intentData.entities.on_off[0].value === 'on' ? true : false;
-        handleIotAction(senderID, namaTempat, namaThing, state);
+        //handleIotAction(senderID, namaTempat, namaThing, state);
       }
     });
 };
